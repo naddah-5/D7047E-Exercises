@@ -2,11 +2,13 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 from torch.utils.tensorboard import SummaryWriter
+import ssl 
 
 class Dataset():
 
     def __init__(self, batch_size):
         self.batch_size = batch_size
+        ssl._create_default_https_context = ssl._create_unverified_context # fixed certification error
 
     def load_dataset(self):
         transform = transforms.Compose(
