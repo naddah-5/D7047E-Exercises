@@ -131,3 +131,6 @@ dmypy.json
 
 # Ignores all /data/ files and folders.
 **/data/**
+
+# Excludes tensorboard output.
+**/runs/**
