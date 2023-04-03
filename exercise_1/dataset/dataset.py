@@ -1,6 +1,10 @@
 import torch
 import torchvision
 import torchvision.transforms as transforms
+import torch.nn as nn
+import torch.optim as optim
+from torch.nn import LeakyReLU
+from torch.utils.tensorboard import SummaryWriter
 
 def load_dataset(batch_size: int = 10):
     transform = transforms.Compose(
@@ -18,3 +22,7 @@ def load_dataset(batch_size: int = 10):
     labels = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
     return trainloader, valloader, testloader, labels
+
+if __name__=="__main__":
+    print(load_dataset())
+    
