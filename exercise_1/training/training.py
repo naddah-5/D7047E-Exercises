@@ -6,14 +6,14 @@ from torch.utils.tensorboard import SummaryWriter
 class Training():
 
     def __init__(self, network, train_loader, val_loader, test_loader, epochs: int, learning_rate, best_net=None):
-        self.network = network,
-        self.train_loader = train_loader,
-        self.val_loader = val_loader,
-        self.test_loader = test_loader,
-        self.epochs = epochs,
-        self.lossfunction = nn.CrossEntropyLoss(),
-        self.optimizer = optim.SGD(network.parameters(), lr=learning_rate),
-        self.writer = SummaryWriter(),
+        self.network = network
+        self.train_loader = train_loader
+        self.val_loader = val_loader
+        self.test_loader = test_loader
+        self.epochs = epochs
+        self.lossfunction = nn.CrossEntropyLoss()
+        self.optimizer = optim.SGD(network.parameters(), lr=learning_rate)
+        self.writer = SummaryWriter()
         self.best_net = best_net
 
 
@@ -23,20 +23,24 @@ class Training():
             correct = 0
             total = 0
             accuracy = 0
-            for i, data in enumerate(self.train_loader, 0):
-                inputs, labels = data
+            for batch_nr, (data, labels) in enumerate(self.train_loader):
 
-                outputs = self.network(inputs)  # prediction
+                predictions = self.network.forward(data)
 
-                _, predicted = torch.max(outputs.data, 1)
+                _, predicted = torch.max(predictions.data, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
 
-                loss = self.lossfunction(outputs, labels)
+                loss = self.lossfunction(predictions, labels)
                 loss.backward()
 
                 self.optimizer.step()
                 self.optimizer.zero_grad()
+
+                print(
+                    f'\rEpoch {epoch + 1} [{batch_nr + 1}/{len(self.train_loader)}] - Loss {loss}',
+                    end=''
+                )
 
             accuracy = correct / total
             self.writer.add_scalar('Loss/train', loss, (epoch + 1))
@@ -46,20 +50,18 @@ class Training():
 
         return ()
 
-    def val_model(self, best_loss):
+    def val_model(self, epoch, best_loss):
         correct = 0
         total = 0
         accuracy = 0
-        for i, data in enumerate(self.val_loader, 0):
-            inputs, labels = data
+        for batch_nr, (data, labels) in enumerate(self.val_loader, 0):
+            predictions = self.network.forward(data)
 
-            outputs = self.network(inputs)  # prediction
-
-            _, predicted = torch.max(outputs.data, 1)
+            _, predicted = torch.max(predictions.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-            loss = self.lossfunction(outputs, labels)
+            loss = self.lossfunction(predictions, labels)
 
         accuracy = correct / total
         self.writer.add_scalar('Loss/validation', loss, (self.epoch + 1))
@@ -75,16 +77,14 @@ class Training():
         correct = 0
         total = 0
         accuracy = 0
-        for i, data in enumerate(self.test_loader, 0):
-            inputs, labels = data
+        for batch_nr, (data, labels) in enumerate(self.test_loader, 0):
+            predictions = self.network.forward(data)
 
-            outputs = torch.load(self.best_net)  # prediction
-
-            _, predicted = torch.max(outputs.data, 1)
+            _, predicted = torch.max(predictions.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-            loss = self.lossfunction(outputs, labels)
+            loss = self.lossfunction(predictions, labels)
 
         accuracy = correct / total
 
