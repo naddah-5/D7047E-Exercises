@@ -64,8 +64,8 @@ class Training():
             loss = self.lossfunction(predictions, labels)
 
         accuracy = correct / total
-        self.writer.add_scalar('Loss/validation', loss, (self.epoch + 1))
-        self.writer.add_scalar('Accuracy/validation', accuracy, (self.epoch + 1))
+        self.writer.add_scalar('Loss/validation', loss, (epoch + 1))
+        self.writer.add_scalar('Accuracy/validation', accuracy, (epoch + 1))
 
         if loss < best_loss:
             best_loss = loss
