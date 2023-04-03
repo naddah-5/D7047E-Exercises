@@ -9,7 +9,12 @@ def load_dataset(batch_size: int = 10):
 
     trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
     test_val_set = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
-    valset , testset = torch.utils.data.random_split(test_val_set, [0.4, 0.6])
+
+    proportions = [.40, .60]
+    lengths = [int(p * len(test_val_set)) for p in proportions]
+    lengths[-1] = len(test_val_set) - sum(lengths[:-1])
+
+    valset , testset = torch.utils.data.random_split(test_val_set, lengths)
 
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
     valloader = torch.utils.data.DataLoader(valset, batch_size=batch_size, shuffle=False, num_workers=2)
