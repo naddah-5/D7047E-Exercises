@@ -12,7 +12,7 @@ class Training():
         self.test_loader = test_loader
         self.epochs = epochs
         self.lossfunction = nn.CrossEntropyLoss()
-        self.optimizer = optim.SGD(network.parameters(), lr=learning_rate)
+        self.optimizer = optim.Adam(network.parameters(), lr=learning_rate)
         self.writer = SummaryWriter()
         self.best_net = best_net
 
