@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Exclude dataset.
+**/**/data
+
+# Exclude runs.
+**/runs
