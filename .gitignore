@@ -134,3 +134,7 @@ dmypy.json
 
 # Excludes tensorboard output.
 **/runs/**
+
+
+# Exclude models.
+*.pt
