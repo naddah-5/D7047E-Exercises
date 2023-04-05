@@ -19,7 +19,10 @@ class Dataset():
         ])
 
         trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+        
         test_val_set = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
+
+        
 
         proportions = [.40, .60]
         lengths = [int(p * len(test_val_set)) for p in proportions]
@@ -30,7 +33,8 @@ class Dataset():
         trainloader = torch.utils.data.DataLoader(trainset, batch_size=self.batch_size, shuffle=True, num_workers=2)
         valloader = torch.utils.data.DataLoader(valset, batch_size=self.batch_size, shuffle=False, num_workers=2)
         testloader = torch.utils.data.DataLoader(testset, batch_size=self.batch_size, shuffle=False, num_workers=2)
-
+        
+       
         labels = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
         return trainloader, valloader, testloader, labels
