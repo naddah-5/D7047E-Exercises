@@ -52,7 +52,7 @@ class Training():
                 time_in_h=str(datetime.timedelta(seconds=remaining_time))
 
                 print(
-                    f'\rEpoch {epoch + 1} [{batch_nr + 1}/{len(self.train_loader)}] - Loss {loss:.10f}- Remaining time: {time_in_h}' ,
+                    f'\rEpoch {epoch + 1}/{self.epochs} [{batch_nr + 1}/{len(self.train_loader)}] - Loss {loss:.10f}- Remaining time: {time_in_h}' ,
                     end=''
                 )
 
