@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 
+
 class Training():
 
     def __init__(self, network, train_loader, val_loader, test_loader, epochs: int, learning_rate, best_net=None):
