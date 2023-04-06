@@ -1,10 +1,11 @@
 import torch
 import torch.nn as nn
 import torchvision.models as VisionModel
+from torchvision.models import alexnet
 
 class Alex():
 
-    def __init__(self, class_count: int = 10, softmax: bool = False, feature_extract: bool = False,device: str = 'cpu'):
+    def __init__(self, class_count: int = 10, softmax: bool = False, feature_extract: bool = False, device: str = 'cpu'):
         alex = torch.hub.load('pytorch/vision:v0.10.0', 'alexnet', pretrained=True) 
         in_count = 4096
         
