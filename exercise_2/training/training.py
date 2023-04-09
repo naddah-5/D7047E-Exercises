@@ -7,11 +7,12 @@ import datetime
 
 class Training():
 
-    def __init__(self, network, train_loader, val_loader, test_loader, epochs: int, learning_rate, best_net=None,device: str='cpu'):
+    def __init__(self, network, train_loader, val_loader, test_loader, test_loader_SVHN, epochs: int, learning_rate, best_net=None,device: str='cpu'):
         self.network = network
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.test_loader = test_loader
+        self.test_loader_SVHN = test_loader_SVHN
         self.epochs = epochs
         self.lossfunction = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(network.parameters(), lr=learning_rate)
@@ -88,7 +89,7 @@ class Training():
 
         return best_loss
 
-    def test_model(self):
+    def test_model_MNIST(self):
         correct = 0
         total = 0
         accuracy = 0
@@ -103,6 +104,22 @@ class Training():
             loss = self.lossfunction(predictions, labels)
 
         accuracy = correct / total
+        return accuracy
 
+    def test_model_SVHN(self):
+        correct = 0
+        total = 0
+        accuracy = 0
+        for batch_nr, (data, labels) in enumerate(self.test_loader_SVHN, 0):
+            data, labels=data.to(self.device), labels.to(self.device)
+            predictions = self.network.forward(data)
+
+            _, predicted = torch.max(predictions.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
+            loss = self.lossfunction(predictions, labels)
+
+        accuracy = correct / total
         return accuracy
 
