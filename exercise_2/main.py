@@ -5,7 +5,7 @@ from training.training import Training
 import torch
 
 def main():
-    epochs = 100
+    epochs = 200
     batch_size = 10
     learning_rate = 0.0001
     best_net = ''
