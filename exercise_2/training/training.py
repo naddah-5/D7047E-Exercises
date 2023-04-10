@@ -65,6 +65,8 @@ class Training():
 
         return ()
 
+
+
     def val_model(self, epoch, best_loss):
         correct = 0
         total = 0
