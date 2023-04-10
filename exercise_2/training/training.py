@@ -91,7 +91,7 @@ class Training():
 
         return best_loss
 
-    def test_model_MNIST(self):
+    def test_model(self):
         correct = 0
         total = 0
         accuracy = 0
