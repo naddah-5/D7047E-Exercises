@@ -13,5 +13,5 @@ class TransferModel():
         network.load_state_dict(dict)
         for parameter in network.parameters():
             parameter.requires_grad = False
-        network.classifier[-1].requires_grad = True
+        network.classifier[-1] = nn.Linear(in_count, class_count)
         self.network = network

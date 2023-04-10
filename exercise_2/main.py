@@ -1,7 +1,7 @@
 from dataset.dataset import Dataset
 from model.transfer_learning import TransferModel
 from model.alex import Alex
-#from model.cnn import CNN
+from model.cnn import CNN
 from training.training import Training
 import torch
 
@@ -23,10 +23,10 @@ def main():
 
     #model = CNN(class_count=10, device=my_device)
     model = TransferModel()
-    model = model.load_CNN(network_path="best_network.pt")
-    model.to(my_device)
+    model.load_CNN(network_path="best_network.pt")
+    model.network.to(my_device)
 
-    training = Training(model, train_loader_MNIST, val_loader_MNIST, test_loader_MNIST, test_loader_SVHN, epochs, learning_rate, device=my_device)
+    training = Training(model.network, train_loader_MNIST, val_loader_MNIST, test_loader_MNIST, test_loader_SVHN, epochs, learning_rate, device=my_device)
     training.train_model()
     
 

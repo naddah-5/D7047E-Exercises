@@ -87,7 +87,7 @@ class Training():
 
         if loss < best_loss:
             best_loss = loss
-            torch.save(self.network, "best_network.pt")
+            torch.save(self.network.state_dict(), "best_network.pt")
 
         return best_loss
 
