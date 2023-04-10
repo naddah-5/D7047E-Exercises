@@ -11,7 +11,7 @@ class TransferModel():
         network = CNN(device=device)
         dict = torch.load(network_path)
         network.load_state_dict(dict)
-        for parameter in network.parameters():
-            parameter.requires_grad = False
+        #for parameter in network.parameters():
+        #    parameter.requires_grad = False
         network.classifier[-1] = nn.Linear(in_count, class_count)
         self.network = network
