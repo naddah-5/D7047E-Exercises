@@ -1,5 +1,5 @@
 from dataset.dataset import Dataset
-from model.transfer_learning import transfer_model
+from model.transfer_learning import TransferModel
 from model.alex import Alex
 from model.cnn import CNN
 from training.training import Training

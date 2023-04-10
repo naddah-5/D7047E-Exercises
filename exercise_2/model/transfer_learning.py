@@ -2,7 +2,7 @@ from model.cnn import CNN
 import torch
 import torch.nn as nn
 
-class transfer_model():
+class TransferModel():
     def __init__(self) -> None:
         self.network = None
     
