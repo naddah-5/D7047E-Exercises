@@ -6,11 +6,11 @@ class CNN(nn.Module):
         super().__init__()
         
         self.features = nn.Sequential(
-            nn.Conv2d(1, 6, 5),
+            nn.Conv2d(1, 60, 5),
             nn.MaxPool2d(2, 2),
-            nn.Conv2d(6, 16, 5),
+            nn.Conv2d(60, 160, 5),
             nn.MaxPool2d(2, 2),
-            nn.Conv2d(16, 32, 5),
+            nn.Conv2d(160, 320, 5),
         )
 
         #self.dropout = nn.Dropout(p=dropout)
@@ -19,7 +19,7 @@ class CNN(nn.Module):
 
         self.classifier = nn.Sequential(
             nn.Dropout(p=drop_in),
-            nn.Linear(32, 21), #fc1
+            nn.Linear(320, 21), #fc1
             nn.LeakyReLU(),
             nn.Dropout(p=dropout),
             nn.Linear(21, class_count),          #fc5
