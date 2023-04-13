@@ -9,16 +9,16 @@ from application.validate import validate_model
 
 class Training():
 
-    def __init__(self, network, train_loader, val_loader, epochs: int, learning_rate, best_net=None,device: str='cpu'):
+    def __init__(self, network, train_loader, val_loader, epochs: int, learning_rate, best_net=None, device: str='cpu'):
         self.network = network
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.epochs = epochs
-        self.lossfunction = nn.CrossEntropyLoss()
+        self.loss_function = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(network.parameters(), lr=learning_rate)
         self.writer = SummaryWriter()
         self.best_net = best_net
-        self.device=device
+        self.device = device
 
     def train_model(self):
         best_loss = 100
@@ -39,7 +39,7 @@ class Training():
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
 
-                loss = self.lossfunction(predictions, labels)
+                loss = self.loss_function(predictions, labels)
                 loss.backward()
 
                 self.optimizer.step()
@@ -68,4 +68,4 @@ class Training():
             self.writer.add_scalar('Loss/validation', loss, (epoch + 1))
             self.writer.add_scalar('Accuracy/validation', accuracy, (epoch + 1))
 
-        return (flattened_layer)
+        return flattened_layer
