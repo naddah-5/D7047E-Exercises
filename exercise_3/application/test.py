@@ -6,7 +6,7 @@ import time
 import datetime
 
 class Test():
-    
+
     def __init__(self, network, test_loader, epochs: int, learning_rate, best_net=None,device: str='cpu'):
         self.network = network
         self.test_loader = test_loader

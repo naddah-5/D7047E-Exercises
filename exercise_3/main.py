@@ -3,6 +3,7 @@ from model.nnc import CNN
 from application.train import Training
 import torch
 
+
 def main():
     epochs = 1
     batch_size = 10
@@ -13,16 +14,19 @@ def main():
     print("using device ", my_device)
 
 
-    datasetMNIST = Dataset(batch_size)
+    datasetMNIST = Dataset(batch_size, MNIST=True)
 
     train_loader_MNIST, val_loader_MNIST, test_loader_MNIST, _ = datasetMNIST.load_dataset()
     
 
     model = CNN(class_count=10, device=my_device)
-    model.network.to(my_device)
+    model.to(my_device)
 
-    training = Training(model.network, train_loader_MNIST, val_loader_MNIST, test_loader_MNIST, epochs, learning_rate, device=my_device)
-    training.train_model()
+    training = Training(model, train_loader_MNIST, val_loader_MNIST, epochs, learning_rate, device=my_device)
+    flattened_layer=training.train_model()
+
+
+
     
 
     best_accuracy = training.test_model()
