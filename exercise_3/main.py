@@ -7,12 +7,13 @@ import torch
 import numpy as np
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA 
 
 
 def main():
-    epochs = 1
+    epochs = 20
     batch_size = 1000
-    learning_rate = 1E-6
+    learning_rate = 1E-3
     best_net: str = ''
 
     # set device to gpu if available
@@ -28,20 +29,29 @@ def main():
     model.to(my_device)
 
     training = Training(model, train_loader_MNIST, val_loader_MNIST, epochs, learning_rate, device=my_device)
-    flattened_layer, current_predictions = training.train_model()
-    
-    tsne = TSNE(n_components=2).fit_transform(current_predictions)
+    flattened_layer, current_predictions, labels = training.train_model()
 
-    tx = tsne[:, 0]
-    ty = tsne[:, 1]
-    tx = scale_to_01_range(tx)
-    ty = scale_to_01_range(ty)
+    tsne = TSNE(n_components=2).fit_transform(current_predictions)
+    pca = PCA(n_components=2).fit_transform(current_predictions)
+
+    tx_tsne = tsne[:, 0]
+    ty_tsne = tsne[:, 1]
+    tx_tsne = scale_to_01_range(tx_tsne)
+    ty_tsne = scale_to_01_range(ty_tsne)
+
+    tx_pca = pca[:, 0]
+    ty_pca = pca[:, 1]
+    tx_pca = scale_to_01_range(tx_pca)
+    ty_pca = scale_to_01_range(ty_pca)
 
     # initialize a matplotlib plot
     fig = plt.figure()
-    ax = fig.add_subplot(111)
+    ax_pca = fig.add_subplot(121)
+    ax_tsne = fig.add_subplot(122)
 
-    #colors_per_class = {0:'#1f77b4', 1:'#ff7f0e', 2:'#2ca02c', 3:'#d62728', 4:'#9467bd', 5:'#8c564b', 6:'#e377c2', 7:'#7f7f7f', 8:'#bcbd22', 9:'#17becf'}
+    ax_pca.set_title('PCA')
+    ax_tsne.set_title('t-SNE')
+
     colors_per_class = {
                         0: (31, 119, 180),
                         1: (255, 127, 14),
@@ -54,7 +64,13 @@ def main():
                         8: (188, 189, 34),
                         9: (23, 190, 207)
                         }
+    color_to_class(colors_per_class, tx_pca, ty_pca, labels, ax_pca)
+    color_to_class(colors_per_class, tx_tsne, ty_tsne, labels, ax_tsne)
 
+    # finally, show the plot
+    plt.show()
+    
+def color_to_class(colors_per_class, tx, ty, labels, ax):
     # for every class, we'll add a scatter plot separately
     for label in colors_per_class:
         # find the samples of the current class in the data
@@ -66,33 +82,12 @@ def main():
 
         # convert the class color to matplotlib format
         color = np.array(colors_per_class[label]) / 255
-        print("color: ", color)
 
         # add a scatter plot with the corresponding color and label
         ax.scatter(current_tx, current_ty, c=color, label=label)
 
     # build a legend using the labels we set previously
     ax.legend(loc='best')
-
-    # finally, show the plot
-    plt.show()
-
-
-    #   best_accuracy = test_model(network, test_loader, epochs: int, learning_rate, best_net=None, device: str='cpu')
-
- #   print("\n MNIST Test accuracy of %f" % (best_accuracy))
-#    print(len(flattened_layer), flattened_layer)
-    tsne = TSNE(n_components=2, perplexity=50, random_state=0)
-#    print('############################################### \n',tsne)
-    tsne_output = tsne.fit_transform(flattened_layer)
-    
-
-    
-#    color_map = plt.cm.get_cmap('gist_rainbow', len(colors))
-
-    plt.scatter(tsne_output[:, 0], tsne_output[:, 1])#, c=colors, cmap=color_map)
-    plt.show()
-
 
 # scale and move the coordinates so they fit [0; 1] range
 def scale_to_01_range(x):

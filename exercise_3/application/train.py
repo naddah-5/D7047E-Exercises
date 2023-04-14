@@ -25,6 +25,8 @@ class Training():
         best_loss = 100
         #total_iterations = self.epochs * len(self.train_loader)
         iteration = 0
+        all_labels = []
+        current_predictions = []
         
         for epoch in range(self.epochs):
             correct = 0
@@ -75,4 +77,4 @@ class Training():
             self.writer.add_scalar('Loss/validation', loss, (epoch + 1))
             self.writer.add_scalar('Accuracy/validation', accuracy, (epoch + 1))
 
-        return flattened_layer, current_predictions
+        return flattened_layer, current_predictions, labels
