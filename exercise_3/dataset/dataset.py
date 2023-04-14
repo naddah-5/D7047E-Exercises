@@ -55,6 +55,6 @@ class Dataset():
         testloader = torch.utils.data.DataLoader(testset, batch_size=self.batch_size, shuffle=False, num_workers=2)
         
        
-        labels = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+        labels = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 
         return trainloader, valloader, testloader, labels

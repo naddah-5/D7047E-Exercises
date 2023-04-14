@@ -27,12 +27,10 @@ def main():
     model = CNN(class_count=10, device=my_device)
     model.to(my_device)
 
-    training = Training(model, train_loader_MNIST, val_loader_MNIST,
-                        epochs, learning_rate, device=my_device)
-    flattened_layer, features = training.train_model()
-    flattened_layer = flattened_layer.cpu().detach().numpy()
-
-    tsne = TSNE(n_components=2).fit_transform(features)
+    training = Training(model, train_loader_MNIST, val_loader_MNIST, epochs, learning_rate, device=my_device)
+    flattened_layer, current_predictions = training.train_model()
+    
+    tsne = TSNE(n_components=2).fit_transform(current_predictions)
 
     tx = tsne[:, 0]
     ty = tsne[:, 1]
@@ -42,6 +40,20 @@ def main():
     # initialize a matplotlib plot
     fig = plt.figure()
     ax = fig.add_subplot(111)
+
+    #colors_per_class = {0:'#1f77b4', 1:'#ff7f0e', 2:'#2ca02c', 3:'#d62728', 4:'#9467bd', 5:'#8c564b', 6:'#e377c2', 7:'#7f7f7f', 8:'#bcbd22', 9:'#17becf'}
+    colors_per_class = {
+                        0: (31, 119, 180),
+                        1: (255, 127, 14),
+                        2: (44, 160, 44),
+                        3: (214, 39, 40),
+                        4: (148, 103, 189),
+                        5: (140, 86, 75),
+                        6: (227, 119, 194),
+                        7: (127, 127, 127),
+                        8: (188, 189, 34),
+                        9: (23, 190, 207)
+                        }
 
     # for every class, we'll add a scatter plot separately
     for label in colors_per_class:
@@ -53,7 +65,8 @@ def main():
         current_ty = np.take(ty, indices)
 
         # convert the class color to matplotlib format
-        color = np.array(colors_per_class[label], dtype=np.float) / 255
+        color = np.array(colors_per_class[label]) / 255
+        print("color: ", color)
 
         # add a scatter plot with the corresponding color and label
         ax.scatter(current_tx, current_ty, c=color, label=label)
@@ -72,9 +85,9 @@ def main():
     tsne = TSNE(n_components=2, perplexity=50, random_state=0)
 #    print('############################################### \n',tsne)
     tsne_output = tsne.fit_transform(flattened_layer)
+    
 
-#    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
-
+    
 #    color_map = plt.cm.get_cmap('gist_rainbow', len(colors))
 
     plt.scatter(tsne_output[:, 0], tsne_output[:, 1])#, c=colors, cmap=color_map)

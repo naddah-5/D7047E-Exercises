@@ -33,11 +33,14 @@ class Training():
             #start_time = time.time()
             for batch_nr, (data, labels) in enumerate(self.train_loader):
                 iteration += 1
-                data, labels=data.to(self.device), labels.to(self.device)
+                data, labels = data.to(self.device), labels.to(self.device)
                 predictions,flattened_layer = self.network.forward(data)
 
-                current_predictions = flattened_layer.cpu().numpy() # .detach()
-                features = np.concatenate((flattened_layer, current_predictions))
+                current_predictions = flattened_layer.cpu().detach().numpy()
+
+                #features = np.concatenate((labels, current_predictions))
+
+                #features = [(label, current_predictions[i]) for i, label in enumerate(labels_list)]
 
                 _, predicted = torch.max(predictions.data, 1)
                 total += labels.size(0)
@@ -72,4 +75,4 @@ class Training():
             self.writer.add_scalar('Loss/validation', loss, (epoch + 1))
             self.writer.add_scalar('Accuracy/validation', accuracy, (epoch + 1))
 
-        return flattened_layer, features
+        return flattened_layer, current_predictions
