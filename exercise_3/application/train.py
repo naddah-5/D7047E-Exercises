@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -35,6 +36,9 @@ class Training():
                 data, labels=data.to(self.device), labels.to(self.device)
                 predictions,flattened_layer = self.network.forward(data)
 
+                current_predictions = flattened_layer.cpu().numpy() # .detach()
+                features = np.concatenate((flattened_layer, current_predictions))
+
                 _, predicted = torch.max(predictions.data, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
@@ -68,4 +72,4 @@ class Training():
             self.writer.add_scalar('Loss/validation', loss, (epoch + 1))
             self.writer.add_scalar('Accuracy/validation', accuracy, (epoch + 1))
 
-        return flattened_layer
+        return flattened_layer, features
